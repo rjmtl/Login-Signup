@@ -3,6 +3,7 @@ import "./App.css"
 import {withRouter} from "react-router-dom"
 
 
+
 class Login extends React.Component{
     constructor(props){
         super(props)
@@ -13,27 +14,30 @@ class Login extends React.Component{
             password:""
         }
     }
-    changehandle(e) {
-        this.setState({ [e.target.name]: e.target.value });
-    }
+        changehandle(e) {
+            this.setState({ [e.target.name]: e.target.value });
+        }
     submithandle(e){
         var flag=false;
         e.preventDefault();
         for(let i=0;i<localStorage.length;i++){
         let temp = JSON.parse(localStorage.getItem(localStorage.key(i)));
-        console.log(this.state.email,this.state.password);
-        console.log(temp.email,temp.password);
-        
         if(temp.email === this.state.email && temp.password === this.state.password){
             flag=true;
+            localStorage.setItem("isLoggedIn",true);
+            localStorage.setItem("currentUser",temp.name);
+            localStorage.setItem("currentEmail",temp.email);
+            break;
+            
         }
-        else;
         }
         if(flag){
             this.props.history.push("/Welcome");
+            
         }
         else{
-            alert("Invalid Password");
+            alert("Invalid Email or Password");
+            
         }
     this.setState({
         email:"",
@@ -41,8 +45,19 @@ class Login extends React.Component{
     })
 }
 
+    componentDidMount(){
+        var logg=localStorage.getItem("isLoggedIn");
+        console.log(logg);
+        if(logg){
+            this.props.history.push('/Welcome')
+    }
+    
+}
+
 render(){
     return(
+        <>
+        
         <div className="main">
             <div className="inner">
                 <h1>Login</h1>
@@ -56,9 +71,9 @@ render(){
         </form>
         
         <button className="inputBox"><a href="/Signup" >Signup</a></button>
-    
+         </div>
         </div>
-        </div>
+        </>
     )
 }
 }

@@ -1,8 +1,17 @@
 import React from "react"
 import { withRouter } from "react-router-dom"
+var now=Date.now();
+var time_difference=now-567648000000;
+var time=new Date(time_difference);
+var year = time.getFullYear();
+var month = ("0" + (time.getMonth() + 1)).slice(-2);
+var day = ("0" + time.getDate()).slice(-2);
+var maxtime=(`${year}-${month}-${day}`);
+console.log(maxtime);
+
 
 class Signup extends React.Component {
-    constructor(props) {
+    constructor(props) {    
         super(props);
         this.changehandler = this.changehandler.bind(this);
         this.submithandler = this.submithandler.bind(this);
@@ -11,138 +20,186 @@ class Signup extends React.Component {
 
         this.state = {
             name: "",
-            lastname:"",
+            lastname: "",
             email: "",
             password: "",
-            confirmpassword:"",
-            dob:"",
+            confirmpassword: "",
+            dob: "",
             nameError: "",
+            lastnameError: "",
             emailError: "",
             passwordError: "",
             error: "",
-            contactno:""
+            contactno: "",
+            characterError: "",
+            numberError: "",
+            capitalError: "",
+            smallError: "",
+            contactnoError: "",
+            confirmpasswordError: "",
+            validitycheck: false,
+            formError: "",
+            date: "",
+            dateError: "",
+            nameformvalid: false,
+            lastnameformvalid: false,
+            emailformvalid: false,
+            passwordformvalid: false,
+            confirmpasswordvalid: false,
+            contactnovalid: false,
+            datevalid: false,
+
         }
-        // var errorname;
+
     }
 
     changehandler(e) {
-        this.setState({ [e.target.name]: e.target.value }, () => { this.validate(e.target.name, e.target.value) });
+        this.setState({ [e.target.name]: e.target.value }, () => {
+            
+            this.validate(e.target.name, e.target.value)
+            
+        });
     }
     submithandler(e) {
         e.preventDefault();
-        var flag=false;
+        var flag = false;
         const valid = this.validate();
-        for(let i=0;i<localStorage.length;i++){
-        let temp = JSON.parse(localStorage.getItem(localStorage.key(i)));
-        
-        
-        if(temp.email===this.state.email){
-            flag=true;
+        for (let i = 0; i < localStorage.length; i++) {
+            let temp = JSON.parse(localStorage.getItem(localStorage.key(i)));
 
-        }
-        else;}
 
-        if(flag==false)
-        {
-        localStorage.setItem(this.state.email, JSON.stringify(this.state));
-        alert("Signed Up! Successfully");
-        this.props.history.push("/");
+            if (temp.email === this.state.email) {
+                flag = true;
+
+            }
+            else;
         }
-        else{
+
+        if (flag === false) {
+            localStorage.setItem(this.state.email, JSON.stringify(this.state));
+            alert("Signed Up! Successfully");
+            this.props.history.push("/");
+        }
+        else {
             alert("Email already exist");
         }
 
         if (valid) {
             this.setState({
                 name: "",
-                lastname:"",
+                lastname: "",
                 email: "",
                 password: "",
-                confirmpassword:"",
-                dob:"",
-                contactno:"",
+                confirmpassword: "",
+                dob: "",
+                contactno: "",
                 nameError: "",
-                lastnameError:"",
+                lastnameError: "",
                 emailError: "",
                 passwordError: "",
-                confirmpasswordError:"",
+                confirmpasswordError: "",
                 error: "",
-                contactnoError:""
-                
-
+                dateError: "",
+                contactnoError: "",
+                characterError: "",
+                numberError: "",
+                capitalError: "",
+                smallError: "",
             })
         }
     }
 
     validate(fieldname, value) {
-        let formvalid = this.state.formError;
+        
+        let nameformvalid = this.state.nameformvalid;
+        let lastnameformvalid = this.state.lastnameformvalid;
+        let passwordformvalid = this.state.passwordformvalid;
+        let confirmpasswordvalid = this.state.confirmpasswordvalid;
+        let contactnovalid = this.state.contactnovalid;
         let nameError = this.state.nameError;
-        let lastnameError=this.state.lastnameError;
+        let lastnameError = this.state.lastnameError;
         let emailError = this.state.emailError;
         let passwordError = this.state.passwordError;
-        let confirmpasswordError=this.state.confirmpasswordError;
-        let contactnoError=this.state.contactnoError;
+        let confirmpasswordError = this.state.confirmpasswordError;
+        let contactnoError = this.state.contactnoError;
+        let characterError = this.state.characterError;
+        let numberError = this.state.numberError;
+        let capitalError = this.state.capitalError;
+        let smallError = this.state.smallError;
+        let emailformvalid = this.state.emailformvalid;
+        let dateError = this.state.dateError;
+        let datevalid = this.state.datevalid;
 
 
 
 
         switch (fieldname) {
             case 'name':
+                
                 if (value.length === 0) {
-                    formvalid = false;
-                    nameError = "";
+                    nameError = null;
+
+
+                }
+                if (!value.match("^[A-Za-z]+$")) {
+                    nameError = "Only Alphabets are allowed";
+                    nameformvalid = false;
+
+                }
+                else {
+                    nameError = "null";
+                    nameformvalid = true;
+                }
+                if (value.includes(" ")) {
+                    nameError = "Spaces aren't Allowed";
+                    nameformvalid = false;
+                }
+                if (value.match("(?=.*[0-9])")) {
+                    nameError = "Numbers aren't allowed";
+                    nameformvalid = false;
+
                 }
 
-                else if (value === " ") {
-                    nameError = "Spaces aren't Allowed";
-                    // formvalid=false;
 
-                } 
-                else if(value.includes(" ")){
-                    nameError = "Spaces aren't Allowed";
+                else {
+                    nameError = null;
+                    nameformvalid = true;
                 }
-                else if  (value.length < 2) {
-                    // formvalid=false;
-                    nameError = "Too Short!";
+
+                if (value.length === 25) {
+                    nameError = "Maximum 25 Characters are allowed! "
                 }
-                else if (value.length===25){
-                nameError="Maximum 25 Characters are allowed! "
-                }
-                else{
-                    nameError=""
-                    formvalid=true;
-                }
+
 
                 break;
 
-                case 'lastname':
+            case 'lastname':
 
                 if (value.length === 0) {
-                    formvalid = false;
-                    lastnameError = "";
-                }
-                else if (value === 0) {
-                    lastnameError = "Spaces aren't Allowed";
-                    // formvalid=false;
 
-                } 
-                else if (value.includes(" ")) {
-                    lastnameError = "Spaces aren't Allowed";
-                    // formvalid=false;
+                    lastnameError = null;
+                }
+                if (!value.keyCode) {
+                    lastnameError = "Only Alphabets are allowed";
+                    lastnameformvalid = false;
 
                 }
-                else if (value.length < 2) {
-                    // formvalid=false;
-                    lastnameError = "Too Short!";
-                }
-
-                else if (value.length===25){
-                    lastnameError="Maximum 25 Characters are allowed! "
-                    }
                 else {
-                    lastnameError = "";
-                    formvalid = true;
-                    this.setState({ error: this.state.formError });
+                    lastnameError = "null";
+                    lastnameformvalid = true;
+                }
+                if (value.includes(" ")) {
+                    lastnameError = "Spaces aren't Allowed";
+                    lastnameformvalid = false;
+
+                }
+                else {
+                    lastnameError = null;
+                    lastnameformvalid = true;
+                }
+
+                if (value.length === 25) {
+                    lastnameError = "Maximum 25 Characters are allowed! "
                 }
 
                 break;
@@ -150,91 +207,169 @@ class Signup extends React.Component {
 
             case 'email':
                 if (value.length === 0) {
-                    formvalid = false;
+                    emailformvalid = false;
                     emailError = "";
                 }
-                else if (value.match((/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i))) {
-                    formvalid = true;
-                    this.setState({ error: this.state.formError });
+                if (value.match((/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i))) {
+                    emailformvalid = true;
+                    emailError = "";
+
                 }
                 else {
-                    formvalid = false;
+                    emailformvalid = false;
                     emailError = "Invalid Email";
-                    this.setState({ error: false })
+
 
                 }
 
                 break;
 
             case 'password':
-                if (value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")) {
-                    setInterval(this.validateform, 100);
-                    passwordError = "";
 
 
-                    formvalid = true;
+                if (value.match("(?=.*[0-9])")) {
+                    numberError = null;
+
+                }
+
+                if (!value.match("(?=.*[0-9])")) {
+                    numberError = "Should contain atleast one number";
+
+                    console.log(passwordformvalid, "Inside number error");
+                }
+
+
+
+                if (value.match("(?=.*[A-Z])")) {
+                    capitalError = null;
+
+                    console.log(passwordformvalid, "Inside Capital");
+                }
+                if (!value.match("(?=.*[A-Z])")) {
+                    capitalError = "Should contain atleast one capital letter";
+
+                }
+
+
+                if (value.match("(?=.*[a-z])")) {
+                    smallError = null;
+
+
+                }
+
+                if (!value.match("(?=.*[a-z])")) {
+                    smallError = "Should contain atleast one small letter";
+
+                }
+                if (value.match("(?=.*[!@#$%^&*])")) {
+                    characterError = null;
+                }
+                if (!value.match("(?=.*[!@#$%^&*])")) {
+                    characterError = "Should contain atleast one special character";
+                }
+
+
+                if (!numberError && !characterError && !smallError && !capitalError) {
+                    passwordformvalid = true;
+                }
+                else {
+                    passwordformvalid = false;
+                }
+
+                break;
+
+            case 'confirmpassword':
+                if (value === this.state.password) {
+                    confirmpasswordvalid = true;
+                    confirmpasswordError = "";
+                }
+                else {
+                    confirmpasswordvalid = false;
+                    confirmpasswordError = "Those Passwords Doesn't Match! Try again";
+                }
+                break;
+
+            case 'date':
+                
+                var dob=new Date(value);
+                if (now-dob.getTime()<567648000000) {
+                    dateError = "User Must be 18+ to Signup";
+                    datevalid = false;
+                }
+                else {
+                    dateError = null;
+                    datevalid = true;
+                }
+                break;
+
+            case 'contactno':
+                if (value.match("^[0-9]")) {
+                    contactnovalid = true;
+                    contactnoError = "";
+
+                    if (value.length >= 10) {
+                        contactnovalid = true;
+                    }
+
+
+                    if (value.length < 10) {
+                        contactnovalid = false;
+                    }
+
+                    if (!value.match("^[1-9]")) {
+                        contactnoError = "Please Enter a valid number";
+                        contactnovalid = false;
+
+                    }
+
                 }
 
 
                 else {
-                    formvalid = false;
-                    passwordError = "Password Should contain Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
+                    contactnoError = "Only Numbers are Allowed";
 
                 }
                 break;
-                
-                case 'confirmpassword':
-                if(value===this.state.password){
-                    formvalid=true;
-                    confirmpasswordError="";
-                }
-                else{
-                    formvalid=false;
-                    confirmpasswordError="Those Passwords Doesn't Match! Try again";
-                }
-                break;
-
-                case 'contactno':
-                    if(value.match("^[0-9]")){
-                        formvalid=true;
-                        contactnoError="";
-                    }
-                    else
-                    {
-                        contactnoError="Only Numbers are Allowed";
-                        formvalid=false;
-
-                    }
-                    break;
-
-
-
 
             default:
                 break;
+
+
         }
+
         this.setState({
-            formError: formvalid,
             nameError: nameError,
             emailError: emailError,
             passwordError: passwordError,
-            confirmpasswordError:confirmpasswordError,
-            lastnameError:lastnameError,
-            contactnoError:contactnoError,
+            confirmpasswordError: confirmpasswordError,
+            lastnameError: lastnameError,
+            contactnoError: contactnoError,
+            characterError: characterError,
+            numberError: numberError,
+            capitalError: capitalError,
+            smallError: smallError,
+            nameformvalid,
+            lastnameformvalid,
+            emailformvalid,
+            passwordformvalid,
+            confirmpasswordvalid,
+            contactnovalid,
+            datevalid,
+            dateError
+
+        }, () => {
+            
+            this.validateform();
         });
-        
     }
-
     validateform() {
-        this.setState({ formvalid: this.state.formError });
+        this.setState({
+            validitycheck: this.state.nameformvalid && this.state.lastnameformvalid &&
+                this.state.passwordformvalid && this.state.confirmpasswordvalid &&
+                this.state.contactnovalid && this.state.datevalid
+        })
+
     }
-
-
-
-
-
-
-
 
     render() {
         return (
@@ -242,66 +377,81 @@ class Signup extends React.Component {
                 <div className="inner">
                     <h1>SignUp</h1>
                     <form onSubmit={this.submithandler}>
-                       
-                       
+
+
                         <input className="inputBox"
                             name="name"
                             maxLength="25"
+                            minLength="2"
                             value={this.state.name}
                             onChange={(event) => this.changehandler(event)}
                             type="text" placeholder="First Name" required></input>
-                        {this.state.nameError.length ? <span>{this.state.nameError}</span> : null}
-                         <br /><br />
+                        {this.state.nameError ? <span>{this.state.nameError}</span> : null}
+                        <br /><br />
 
                         <input className="inputBox"
                             name="lastname"
+                            minLength="2"
                             maxLength="25"
                             value={this.state.lastname}
                             onChange={(event) => this.changehandler(event)}
                             type="text" placeholder="Last Name" required></input>
-                        {this.state.error ? <span>{this.state.lastnameError}</span> : null}
+                        {this.state.lastnameError ? <span>{this.state.lastnameError}</span> : null}
                         <br /><br />
-                        
+
                         <input className="inputBox"
                             name="email"
                             value={this.state.email}
                             onChange={(event) => this.changehandler(event)}
                             type="email" placeholder="Email" required ></input>
-                        {this.state.error ? null : <span>{this.state.emailError}</span>}
+                        {this.state.emailError ? <span>{this.state.emailError}</span> : null}
                         <br /><br />
 
                         <input className="inputBox"
                             name="password"
+                            minLength="8"
                             value={this.state.password}
                             onChange={(event) => this.changehandler(event)}
                             type='password' placeholder="Password" required></input>
-                        {this.state.formError ? null : <span>{this.state.passwordError}</span>}
+
+                        {this.state.characterError ? <span>{this.state.characterError}<br /></span> : null}
+                        {this.state.numberError ? <span>{this.state.numberError}<br /></span> : null}
+                        {this.state.capitalError ? <span>{this.state.capitalError}<br /></span> : null}
+                        {this.state.smallError ? <span>{this.state.smallError}<br /></span> : null}
+
                         <br /><br />
-                        
-                        
+
+
                         <input className="inputBox"
                             name="confirmpassword"
                             value={this.state.confirmpassword}
                             onChange={(event) => this.changehandler(event)}
                             type='password' placeholder="Confirm Password" required></input>
                         {this.state.formError ? null : <span>{this.state.confirmpasswordError}</span>}
-                        <br/><br/>
+                        <br /><br />
 
-                        <input type="date"className="inputBox" required></input>
-                        <br/><br/>
+                        <input type="date" name="date"
+                            value={this.state.date}
+                            onChange={(event) => this.changehandler(event)}
+                            placeholder="Date"
+                            max={maxtime}
+                            className="inputBox" required></input>
+                        {this.state.date ? <span>{this.state.dateError}</span> : null}
+                        <br /><br />
 
                         <input className="inputBox"
                             name="contactno"
                             type="text"
                             maxLength="10"
-                            
+
                             value={this.state.contactno}
-                            
+
                             onChange={(event) => this.changehandler(event)}
-                             placeholder="Contact No." required></input>
+                            placeholder="Contact No." required></input>
                         {this.state.contactno ? <span>{this.state.contactnoError}</span> : null}
-                        <br/><br/>
-                        <button className="inputBox" disabled={!this.state.formvalid}>Signup</button>
+                        <br /><br />
+
+                        <button className="inputBox" disabled={!this.state.validitycheck}>Signup</button>
                     </form>
                     <br />
                     <button className="inputBox"><a href="/">Login</a></button>
