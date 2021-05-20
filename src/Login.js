@@ -24,6 +24,7 @@ class Login extends React.Component{
         let temp = JSON.parse(localStorage.getItem(localStorage.key(i)));
         if(temp.email === this.state.email && temp.password === this.state.password){
             flag=true;
+            
             localStorage.setItem("isLoggedIn",true);
             localStorage.setItem("currentUser",temp.name);
             localStorage.setItem("currentEmail",temp.email);

@@ -197,7 +197,7 @@ a{
   border-style: solid;
   border-width: 1px;
   border-top: 0;
-  
+  overflow-x: scroll;
 
 }
 /* .Static_Chat{
@@ -234,13 +234,14 @@ a{
 .trial1{
   display: none;
   border: none;
-  margin-top: 2px;
+  
 }
 .trial1.visible{
   display:block;
   border:none;
   width: 150px;
   height: 40px;
+  
 }
 .fileselector{
   display: none;
@@ -305,6 +306,11 @@ li{
   padding: 10px;
   padding-left: 10px;
   color:black;
+  cursor: pointer;
+}
+li:hover{
+  background-color: rgb(165, 159, 159);;
+
 }
 
 .logout{
@@ -392,6 +398,7 @@ li{
   background-size: cover;
   position: absolute;
   margin-left: 352px;
+  
 }
 
 .dp{
